@@ -23,9 +23,9 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_BASE_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_BASE_API_URL=http://localhost:8000/api/v1
     volumes:
-      - ./web:/app
+      - ./web:/src
     depends_on:
       - backend
     command: npm run dev
