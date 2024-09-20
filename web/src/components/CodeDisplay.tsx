@@ -1,14 +1,12 @@
 interface CodeDisplayProps {
-  title: string
   code: string
   onCodeChange: (newCode: string) => void
   actions?: { label: string; onClick: () => void }[]
 }
 
-export default function CodeDisplay({ title, code, onCodeChange, actions }: CodeDisplayProps) {
+export default function CodeDisplay({ code, onCodeChange, actions }: CodeDisplayProps) {
   return (
     <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-2">{title}</h2>
       <textarea
         value={code}
         onChange={(e) => onCodeChange(e.target.value)}
