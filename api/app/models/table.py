@@ -4,9 +4,9 @@ import sqlparse
 
 class Table(BaseModel):
     name: str = Field(..., description="The name of the table.")
-    schema: str = Field(..., description="The SQL schema for the table.")
+    schema_sql: str = Field(..., alias="schema", description="The SQL schema for the table.")
 
-    @validator('schema')
+    @validator('schema_sql')
     def validate_sql_schema(cls, v):
         try:
             parsed = sqlparse.parse(v)
