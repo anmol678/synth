@@ -3,12 +3,11 @@ import os
 from pydantic import BaseModel, Field
 from typing import List
 
+from app.models.table import Table
+from app.utils.logger import logger
 
-class SchemaResponse(BaseModel):
-    class Table(BaseModel):
-        name: str = Field(..., description="The name of the table.")
-        schema: str = Field(..., description="The SQL schema for the table.")
-        
+
+class SchemaResponse(BaseModel):        
     scratchpad: str = Field(..., description="The scratchpad is a space for the LLM to plan and reason before providing a final response.")
     tables: List[Table] = Field(..., description="A list of table names with valid SQL schemas.")
 
@@ -34,12 +33,16 @@ class SchemaGenerator:
         '''
 
     def generate(self, query: str) -> SchemaResponse:
-        response = self.client.beta.chat.completions.parse(
-            model="gpt-4o-2024-08-06",
-            messages=[
-                {"role": "system", "content": self.create_system_prompt()},
-                {"role": "user", "content": self.create_prompt(query)}
-            ],
-            response_format=SchemaResponse
-        )
-        return response.choices[0].message.parsed
+        try:
+            response = self.client.beta.chat.completions.parse(
+                model="gpt-4o-2024-08-06",
+                messages=[
+                    {"role": "system", "content": self.create_system_prompt()},
+                    {"role": "user", "content": self.create_prompt(query)}
+                ],
+                response_format=SchemaResponse
+            )
+            return response.choices[0].message.parsed
+        except Exception as e:
+            logger.error(f"Error generating schema: {str(e)}")
+            raise
