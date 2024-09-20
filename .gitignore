@@ -37,3 +37,7 @@ temp/
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Jupyter
+*.ipynb
+.ipynb_checkpoints/
