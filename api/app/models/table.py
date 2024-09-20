@@ -6,6 +6,7 @@ class Table(BaseModel):
     name: str = Field(..., description="The name of the table.")
     schema_sql: str = Field(..., alias="schema", description="The SQL schema for the table.")
 
+    # this doesn't work because of sqlparse is non-validating parser
     @validator('schema_sql')
     def validate_sql_schema(cls, v):
         try:
