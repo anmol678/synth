@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Table } from '@/types'
 import CodeDisplay from '@/components/CodeDisplay'
 
@@ -11,6 +11,10 @@ interface TabViewProps {
 export default function TabView({ tables, selectedTables, onSelectionChange }: TabViewProps) {
   const [activeTab, setActiveTab] = useState<string | null>(tables[0].name)
 
+  useEffect(() => {
+    setActiveTab(tables[0].name)
+  }, [tables])
+
   const handleCheckboxChange = (table: Table) => {
     const isSelected = selectedTables.some((t) => t.name === table.name)
     const newSelection = isSelected
@@ -19,9 +23,13 @@ export default function TabView({ tables, selectedTables, onSelectionChange }: T
     onSelectionChange(newSelection)
   }
 
+  const handleSelectAll = () => {
+    onSelectionChange(tables)
+  }
+
   return (
     <div className="mb-8">
-      <div className="flex border-b">
+      <div className="flex border-b items-center">
         {tables.map((table) => (
           <div key={table.name} className="flex items-center border-r last:border-r-0">
             <div
@@ -63,7 +71,7 @@ export default function TabView({ tables, selectedTables, onSelectionChange }: T
       )}
       <div className="mt-4">
         <h3 className="text-lg font-semibold mb-2">Selected Tables:</h3>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 mb-4">
           {selectedTables.map((table) => (
             <span
               key={table.name}
@@ -73,6 +81,12 @@ export default function TabView({ tables, selectedTables, onSelectionChange }: T
             </span>
           ))}
         </div>
+        <button
+          onClick={handleSelectAll}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+        >
+          Select All
+        </button>
       </div>
     </div>
   )
