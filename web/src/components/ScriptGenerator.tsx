@@ -30,20 +30,20 @@ export default function ScriptGenerator({ selectedTables, onScriptGenerated, dis
 
   return (
     <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-4">Data Script Generator</h2>
+      <h2 className="text-2xl font-bold mb-4">Python Script Generator</h2>
       <form onSubmit={handleSubmit}>
         <textarea
           value={dataPrompt}
           onChange={(e) => setDataPrompt(e.target.value)}
           className="w-full h-32 p-2 border rounded mb-2"
-          placeholder="Enter data generation prompt..."
+          placeholder="Enter script generation prompt..."
         />
         <button
           type="submit"
           className={`px-4 py-2 bg-green-500 text-white rounded ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
           disabled={isDisabled}
         >
-          {isGenerating ? 'Generating...' : 'Generate Data Script'}
+          {isGenerating ? 'Generating...' : 'Generate Script'}
         </button>
       </form>
     </div>

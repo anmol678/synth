@@ -68,6 +68,7 @@ export default function Home() {
         <CodeDisplay
           code={dataGenerationScript}
           onCodeChange={setDataGenerationScript}
+          size="large"
         // actions={[
         //   { label: 'Test Run', onClick: handleTestRun },
         //   { label: 'Execute Script', onClick: handleExecuteScript },
