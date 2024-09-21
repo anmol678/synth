@@ -31,7 +31,7 @@ export default function TableSchemaTab() {
 
   return (
     <div className="flex flex-col justify-between h-full">
-      <div className="space-y-2 p-4">
+      <div className="space-y-2 p-4 overflow-y-auto">
         {state.tables.map((table) => (
           <TableAccordion
             key={table.name}
