@@ -6,12 +6,12 @@ export default function ScriptTab() {
   const { state, dispatch } = useAppContext()
 
   return (
-    <div className="p-4">
+    <div className="flex flex-col gap-4 p-4 h-full">
       {state.loading && <Loader />}
       <CodeDisplay
         code={state.dataGenerationScript}
         onCodeChange={(code) => dispatch({ type: 'SET_SCRIPT', payload: code })}
-        size="large"
+        size="full"
       />
       <div className="flex space-x-2 mt-4">
         <button

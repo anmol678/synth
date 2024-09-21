@@ -1,14 +1,14 @@
 interface CodeDisplayProps {
   code: string
   onCodeChange: (newCode: string) => void
-  size?: 'default' | 'large'
+  size?: 'default' | 'full'
 }
 
 export default function CodeDisplay({ code, onCodeChange, size = 'default' }: CodeDisplayProps) {
-  const textareaHeight = size === 'large' ? 'h-[36rem]' : 'h-64'
+  const textareaHeight = size === 'full' ? 'h-full' : 'h-64'
 
   return (
-    <div className="mb-8">
+    <div className="flex-1">
       <textarea
         value={code}
         onChange={(e) => onCodeChange(e.target.value)}
