@@ -8,7 +8,10 @@ export async function generateSchema(prompt: string) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt }),
   });
-  if (!response.ok) throw new Error('Failed to generate schema');
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || 'Failed to generate schema');
+  }
   return response.json();
 }
 
@@ -18,16 +21,22 @@ export async function generateScript(prompt: string, selectedTables: Table[]) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt, selected_tables: selectedTables }),
   });
-  if (!response.ok) throw new Error('Failed to generate script');
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || 'Failed to generate script');
+  }
   return response.json();
 }
 
-export async function executeScript(script: string) {
+export async function executeScript(script: string, tables: Table[]) {
   const response = await fetch(`${BASE_URL}/execute-script`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ script }),
+    body: JSON.stringify({ script, tables }),
   });
-  if (!response.ok) throw new Error('Failed to execute script');
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || 'Failed to execute script');
+  }
   return response.json();
 }
