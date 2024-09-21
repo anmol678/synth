@@ -31,7 +31,7 @@ class ScriptExecutor:
             # Insert generated data into tables
             results = {}
             for table in sorted_tables:
-                data = local_namespace.get(f"{table.name}_data", [])
+                data = local_namespace.get(f"{table.name.lower()}_data", [])
                 logger.info(f"Inserting {len(data)} rows into {table.name}")
                 
                 if data:

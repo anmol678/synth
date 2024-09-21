@@ -25,7 +25,7 @@ export default function DataGenerator({ dataGenerationScript, setDataGenerationS
     setResult('')
     try {
       const response = await executeScript(dataGenerationScript, selectedTables)
-      setResult(response.result)
+      setResult(JSON.stringify(response.result))
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message || 'Failed to execute data generation. Please try again.')

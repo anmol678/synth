@@ -12,9 +12,9 @@ interface TabViewProps {
 export default function TabView({ tables, onSchemaChange, selectedTables, onSelectionChange }: TabViewProps) {
   const [activeTab, setActiveTab] = useState<string | null>(tables[0].name)
 
-  useEffect(() => {
-    setActiveTab(tables[0].name)
-  }, [tables])
+  // useEffect(() => {
+  //   setActiveTab(tables[0].name)
+  // }, [tables])
 
   const handleCheckboxChange = (table: Table) => {
     const isSelected = selectedTables.some((t) => t.name === table.name)

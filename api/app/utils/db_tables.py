@@ -114,7 +114,7 @@ def extract_foreign_keys(schema_sql: str) -> list[str]:
     explicit_fk_pattern = r'FOREIGN KEY\s*\([^)]+\)\s*REFERENCES\s*(\w+)'
     
     # Regular expression to match implicit foreign key references
-    implicit_fk_pattern = r'\b(\w+)\s+(?:INTEGER|BIGINT)\s+REFERENCES\s+(\w+)'
+    implicit_fk_pattern = r'\b(\w+)\s+\w+(?:\(\d+(?:,\s*\d+)?\))?\s+REFERENCES\s+(\w+)'
     
     # Find all matches in the schema SQL
     explicit_matches = re.findall(explicit_fk_pattern, schema_sql, re.IGNORECASE)
