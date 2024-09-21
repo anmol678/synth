@@ -65,7 +65,7 @@ export default function Chatbot() {
             value={input}
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="flex-1 p-2 border rounded h-36"
+            className="flex-1 p-2 border rounded h-36 mr-2"
             placeholder="Type your message..."
             disabled={state.loading}
           />
@@ -73,7 +73,7 @@ export default function Chatbot() {
             ? <Loader />
             : <button
               onClick={onSend}
-              className="ml-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={state.loading}
             >
               ➤
