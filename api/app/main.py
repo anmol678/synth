@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 
 from app.routes import router as api_router
-from app.db import init_db
 
 
 app = FastAPI()
@@ -15,10 +14,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(api_router, prefix="/api/v1")
-
-@app.on_event("startup")
-async def startup_event():
-    await init_db()
 
 @app.get("/")
 async def root():

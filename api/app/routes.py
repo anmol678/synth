@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from app.db import get_db
 from app.services.schema_generator import SchemaGenerator
 from app.services.script_generator import ScriptGenerator
+from app.services.script_executor import ScriptExecutor
 from app.models.table import Table
 
 
@@ -15,7 +16,7 @@ class SchemaGenerationRequest(BaseModel):
     prompt: str
 
 @router.post("/generate-schema")
-async def generate_schema(request: SchemaGenerationRequest, db: Connection = Depends(get_db)):
+async def generate_schema(request: SchemaGenerationRequest):
     try:
         response = SchemaGenerator().generate(request.prompt)
         return {"tables": response.tables}
@@ -28,7 +29,7 @@ class ScriptGenerationRequest(BaseModel):
     selected_tables: list[Table]
 
 @router.post("/generate-script")
-async def generate_data_script(request: ScriptGenerationRequest, db: Connection = Depends(get_db)):
+async def generate_data_script(request: ScriptGenerationRequest):
     try:
         response = ScriptGenerator().generate(request.prompt, request.selected_tables)
         return {"script": response.script}
@@ -36,3 +37,15 @@ async def generate_data_script(request: ScriptGenerationRequest, db: Connection 
         raise HTTPException(status_code=500, detail=str(e))
 
 
+class ScriptExecutionRequest(BaseModel):
+    tables: list[Table]
+    script: str
+
+@router.post("/execute-script")
+async def execute_fake_data_generation(request: ScriptExecutionRequest, db: Connection = Depends(get_db)):
+    try:
+        executor = ScriptExecutor(db)
+        result = await executor.execute(request.tables, request.script)
+        return {"message": "Data generation completed successfully", "result": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
