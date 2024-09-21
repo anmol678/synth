@@ -17,7 +17,7 @@ class ScriptGenerator:
 
     @staticmethod
     def create_system_prompt() -> str:
-        return '''You are an expert Python script generator for synthetic data generation based on a given prompt and table schemas.
+        return '''You are an expert Python script generator for synthetic data generation based on given table schemas and instructions.
         You are encouraged to use a step by step approach in the provided scratchpad to plan and reason. Finally, you must provide fully functional Python code based on the instructions provided.
         You must always respond in valid JSON format.
         '''
@@ -29,9 +29,13 @@ class ScriptGenerator:
         The script should use appropriate libraries (e.g., Faker) to generate realistic data. Pay special attention to foreign key relationships and ensure that the data generated for these relationships references previously generated data in the appropriate manner.
         
         Implement the following features in your script:
-        1. Use dictionaries to store generated data, with primary keys as dictionary keys.
-        2. When creating records with foreign keys, iterate over previously generated data to ensure all foreign key references exist and are valid. Picking randomly is a bad idea.
-        3. Ensure that the generated data is consistent across all tables and makes logical sense.
+        1. For each table, create a list of dictionaries named {{table_name}}_data (e.g., users_data for a "users" table).
+        2. Each dictionary in the list should represent a row, with keys matching the column names exactly as they appear in the schema.
+        3. Use primary keys as dictionary keys when referencing data between tables.
+        4. When creating records with foreign keys, iterate over previously generated data to ensure all foreign key references exist and are valid. Avoid picking randomly.
+        5. Ensure that the generated data is consistent across all tables and makes logical sense.
+
+        Your script must define all necessary {{table_name}}_data lists, but should not include any database operations or imports other than those required for data generation.
 
         USER INSTRUCTIONS:
         {instructions}
