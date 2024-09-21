@@ -1,13 +1,11 @@
 import { useAppContext } from '@/context'
 import CodeDisplay from '@/components/CodeDisplay'
-import Loader from '@/components/Loader'
 
 export default function ScriptTab() {
   const { state, dispatch } = useAppContext()
 
   return (
     <div className="flex flex-col gap-4 p-4 h-full">
-      {state.loading && <Loader />}
       <CodeDisplay
         code={state.dataGenerationScript}
         onCodeChange={(code) => dispatch({ type: 'SET_SCRIPT', payload: code })}
