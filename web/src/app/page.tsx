@@ -1,63 +1,25 @@
 "use client"
 
-import { useState } from 'react'
-import TabView from '@/components/TabView'
-import SchemaGenerator from '@/components/SchemaGenerator'
-import ScriptGenerator from '@/components/ScriptGenerator'
-import DataGenerator from '@/components/DataGenerator'
-import { Table } from '@/types'
+import { useAppContext } from '@/context'
+import IDE from '@/components/IDE'
+import Chatbot from '@/components/Chatbot'
+import Loader from '@/components/Loader'
 
 export default function Home() {
-  const [tables, setTables] = useState<Table[]>([])
-  const [selectedTables, setSelectedTables] = useState<Table[]>([])
-  const [dataGenerationScript, setDataGenerationScript] = useState('')
-
-  const handleSchemaGeneration = (tables: Table[]) => {
-    setTables(tables)
-    setSelectedTables([])
-  }
-
-  const handleScriptGeneration = (script: string) => {
-    setDataGenerationScript(script)
-  }
-
-  const handleTableSelection = (selected: Table[]) => {
-    setSelectedTables(selected)
-  }
-
-  const handleTableSchemaChange = (table: Table) => {
-    setTables(tables.map((t) => t.name === table.name ? table : t))
-    setSelectedTables(selectedTables.map((t) => t.name === table.name ? table : t))
-  }
+  const { state } = useAppContext()
 
   return (
-    <main className="p-8">
+    <div className="flex h-screen">
+      <div className="w-1/3 border-r flex flex-col">
+        <Chatbot />
+      </div>
 
-      <SchemaGenerator onSchemaGenerated={handleSchemaGeneration} />
-
-      {tables.length > 0 && (
-        <>
-          <TabView
-            tables={tables}
-            selectedTables={selectedTables}
-            onSelectionChange={handleTableSelection}
-            onSchemaChange={handleTableSchemaChange}
-          />
-          <ScriptGenerator
-            selectedTables={selectedTables}
-            onScriptGenerated={handleScriptGeneration}
-            disabled={selectedTables.length === 0}
-          />
-        </>
-      )}
-
-      {dataGenerationScript && (
-        <DataGenerator
-          dataGenerationScript={dataGenerationScript}
-          setDataGenerationScript={setDataGenerationScript}
-          selectedTables={selectedTables}
-        />
-      )}
-    </main>
+      <div className="w-2/3 flex flex-col">
+        {state.loading && <Loader />}
+        <div className="flex-1 overflow-y-auto">
+          <IDE />
+        </div>
+      </div>
+    </div>
   )
 }
