@@ -9,7 +9,7 @@ from app.utils.logger import logger
 
 class SchemaResponse(BaseModel):        
     scratchpad: str = Field(..., description="The scratchpad is a space for the LLM to plan and reason before providing a final response.")
-    tables: List[Table] = Field(..., description="A list of table names with valid SQL schemas.")
+    tables: List[Table] = Field(..., description="A list of table names with valid PostgreSQL schemas.")
 
 
 class SchemaGenerator:
