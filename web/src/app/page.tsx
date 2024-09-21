@@ -25,6 +25,10 @@ export default function Home() {
     setSelectedTables(selected)
   }
 
+  const handleTableSchemaChange = (table: Table) => {
+    setTables(tables.map((t) => t.name === table.name ? table : t))
+    setSelectedTables(selectedTables.map((t) => t.name === table.name ? table : t))
+  }
 
   return (
     <main className="p-8">
@@ -37,6 +41,7 @@ export default function Home() {
             tables={tables}
             selectedTables={selectedTables}
             onSelectionChange={handleTableSelection}
+            onSchemaChange={handleTableSchemaChange}
           />
           <ScriptGenerator
             selectedTables={selectedTables}

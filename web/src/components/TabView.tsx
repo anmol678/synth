@@ -4,11 +4,12 @@ import CodeDisplay from '@/components/CodeDisplay'
 
 interface TabViewProps {
   tables: Table[]
+  onSchemaChange: (table: Table) => void
   selectedTables: Table[]
   onSelectionChange: (selected: Table[]) => void
 }
 
-export default function TabView({ tables, selectedTables, onSelectionChange }: TabViewProps) {
+export default function TabView({ tables, onSchemaChange, selectedTables, onSelectionChange }: TabViewProps) {
   const [activeTab, setActiveTab] = useState<string | null>(tables[0].name)
 
   useEffect(() => {
@@ -26,6 +27,8 @@ export default function TabView({ tables, selectedTables, onSelectionChange }: T
   const handleSelectAll = () => {
     onSelectionChange(tables)
   }
+
+  const activeTable = tables.find((t) => t.name === activeTab)
 
   return (
     <div className="mb-8">
@@ -60,12 +63,10 @@ export default function TabView({ tables, selectedTables, onSelectionChange }: T
       </div>
       {activeTab && (
         <CodeDisplay
-          code={tables.find((t) => t.name === activeTab)?.schema || ''}
+          code={activeTable?.schema || ''}
           onCodeChange={(newCode) => {
-            const updatedTables = tables.map((t) =>
-              t.name === activeTab ? { ...t, schema: newCode } : t
-            )
-            onSelectionChange(updatedTables)
+            const updatedTable = { ...activeTable, schema: newCode }
+            onSchemaChange(updatedTable as Table)
           }}
         />
       )}
