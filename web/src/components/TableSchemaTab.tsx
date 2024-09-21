@@ -45,7 +45,7 @@ export default function TableSchemaTab() {
       <div className="flex justify-between items-center w-full border-t p-2">
         <div className="flex flex-wrap gap-2">
           Selected Tables:
-          {state.tables.map((table) => (
+          {state.tables.filter(table => table.isSelected).map((table) => (
             <span key={table.name} className="px-2 py-1 bg-green-100 text-green-800 rounded">
               {table.name}
             </span>
