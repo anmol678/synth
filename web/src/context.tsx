@@ -84,30 +84,41 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           break
         }
         case Intents.GenerateScript: {
-          const response = await generateScript(input, state.tables)
-          dispatch({ type: 'SET_SCRIPT', payload: response.script })
-          dispatch({ type: 'SET_ACTIVE_TAB', payload: Tabs.Script })
-          dispatch({ type: 'SET_INTENT', payload: Intents.None })
-          botResponseContent = 'Script generated successfully.'
+          const selectedTables = state.tables.filter((table) => table.isSelected)
+          if (selectedTables.length === 0) {
+            botResponseContent = 'Select at least one table to generate script.'
+          } else {
+            const response = await generateScript(input, selectedTables)
+            dispatch({ type: 'SET_SCRIPT', payload: response.script })
+            dispatch({ type: 'SET_ACTIVE_TAB', payload: Tabs.Script })
+            dispatch({ type: 'SET_INTENT', payload: Intents.None })
+            botResponseContent = 'Script generated successfully.'
+          }
           break
         }
         case Intents.UpdateSchema: {
           // TODO: use update func instead of generating new
-          const response = await generateSchema(input)
-          dispatch({ type: 'SET_TABLES', payload: response.tables })
-          dispatch({ type: 'SET_ACTIVE_TAB', payload: Tabs.Tables })
-          dispatch({ type: 'SET_SCRIPT', payload: '' })
-          dispatch({ type: 'SET_INTENT', payload: Intents.None })
-          botResponseContent = 'Schema updated successfully.'
+          // const response = await generateSchema(input)
+          // dispatch({ type: 'SET_TABLES', payload: response.tables })
+          // dispatch({ type: 'SET_ACTIVE_TAB', payload: Tabs.Tables })
+          // dispatch({ type: 'SET_SCRIPT', payload: '' })
+          // botResponseContent = 'Schema updated successfully.'
+          setTimeout(() => {
+            dispatch({ type: 'SET_INTENT', payload: Intents.None })
+            botResponseContent = 'This feature is not available yet.'
+          }, 1000)
           break
         }
         case Intents.UpdateScript: {
           // TODO: use update func instead of generating new
-          const response = await generateScript(input, state.tables)
-          dispatch({ type: 'SET_SCRIPT', payload: response.script })
-          dispatch({ type: 'SET_ACTIVE_TAB', payload: Tabs.Script })
-          dispatch({ type: 'SET_INTENT', payload: Intents.None })
-          botResponseContent = 'Script updated successfully.'
+          // const response = await generateScript(input, state.tables)
+          // dispatch({ type: 'SET_SCRIPT', payload: response.script })
+          // dispatch({ type: 'SET_ACTIVE_TAB', payload: Tabs.Script })
+          // botResponseContent = 'Script updated successfully.'
+          setTimeout(() => {
+            dispatch({ type: 'SET_INTENT', payload: Intents.None })
+            botResponseContent = 'This feature is not available yet.'
+          }, 1000)
           break
         }
       }
