@@ -12,7 +12,8 @@ export default function ScriptTab() {
     setIsExecuting(true)
     setExecutionResult(null)
     try {
-      const response = await executeScript(state.dataGenerationScript, state.tables)
+      const selectedTables = state.tables.filter((table) => table.isSelected)
+      const response = await executeScript(state.dataGenerationScript, selectedTables)
       setExecutionResult(JSON.stringify(response))
     } catch (error: unknown) {
       setExecutionResult(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`)
