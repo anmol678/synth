@@ -129,16 +129,16 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         sender: 'assistant',
       }
       dispatch({ type: 'ADD_MESSAGE', payload: botMessage })
-    } catch (error: any) {
+    } catch (error: unknown) {
       dispatch({
         type: 'ADD_MESSAGE',
         payload: {
           id: uuidv4(),
-          content: `Error: ${error.message}`,
+          content: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
           sender: 'assistant',
         },
       })
-      dispatch({ type: 'SET_ERROR', payload: error.message })
+      dispatch({ type: 'SET_ERROR', payload: error instanceof Error ? error.message : 'Unknown error' })
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false })
     }
