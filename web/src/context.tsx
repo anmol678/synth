@@ -68,7 +68,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   const sendMessage = async (input: string) => {
     const intent = state.intent
-    addMessage(input.trim().length ? input : intent?.label || '...')
+    addMessage(input.trim() || intent?.label || '...');
 
     dispatch({ type: 'SET_LOADING', payload: true })
     try {
