@@ -1,38 +1,35 @@
-import { useState, KeyboardEvent } from 'react'
+import { useState, KeyboardEvent, ChangeEvent } from 'react'
 import { useAppContext } from '@/context'
-import { v4 as uuidv4 } from 'uuid'
+import { Intent } from '@/types'
+import Loader from '@/components/Loader'
+import Intents from '@/utils/intents'
 
 export default function Chatbot() {
-  const { state, dispatch } = useAppContext()
+  const { state, dispatch, sendMessage } = useAppContext()
   const [input, setInput] = useState('')
 
-  const handleSend = () => {
-    if (input.trim() === '') return
-    const userMessage = {
-      id: uuidv4(),
-      content: input,
-      sender: 'user' as const,
-    }
-    dispatch({ type: 'ADD_MESSAGE', payload: userMessage })
+  const onSend = () => {
+    sendMessage(input)
     setInput('')
-
-    // Simulate bot response
-    setTimeout(() => {
-      const botMessage = {
-        id: uuidv4(),
-        content: 'This is a simulated bot response.',
-        sender: 'bot' as const,
-      }
-      dispatch({ type: 'ADD_MESSAGE', payload: botMessage })
-    }, 1000)
   }
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
-      handleSend()
+      onSend()
     }
   }
+
+  const handleSetIntent = (intent: Intent) => {
+    dispatch({ type: 'SET_INTENT', payload: intent })
+  }
+
+  const intents = [
+    state.tables.length === 0 && Intents.GenerateSchema,
+    state.tables.length > 0 && Intents.UpdateSchema,
+    state.tables.length > 0 && !state.dataGenerationScript && Intents.GenerateScript,
+    state.dataGenerationScript && Intents.UpdateScript,
+  ].filter(Boolean) as Intent[]
 
   return (
     <div className="flex flex-col h-full">
@@ -45,20 +42,44 @@ export default function Chatbot() {
           </div>
         ))}
       </div>
-      <div className="p-4 border-t flex items-center">
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="flex-1 p-2 border rounded resize-none h-12"
-          placeholder="Type your message..."
-        />
-        <button
-          onClick={handleSend}
-          className="ml-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          ➤
-        </button>
+      <div className="p-4 border-t">
+        {/* Intent Pills */}
+        <div className="mb-2 flex space-x-2">
+          {intents.map((itm: Intent) => (
+            <button
+              key={itm.value}
+              onClick={() => handleSetIntent(itm)}
+              className={`px-3 py-1 rounded-full border ${state.intent?.value === itm.value
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-200 text-gray-700'
+                }`}
+              disabled={state.loading}
+            >
+              {itm.label}
+            </button>
+          ))}
+        </div>
+        {/* Input and Send Button */}
+        <div className="flex items-center">
+          <textarea
+            value={input}
+            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="flex-1 p-2 border rounded h-36"
+            placeholder="Type your message..."
+            disabled={state.loading}
+          />
+          {state.loading
+            ? <Loader />
+            : <button
+              onClick={onSend}
+              className="ml-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={state.loading}
+            >
+              ➤
+            </button>
+          }
+        </div>
       </div>
     </div>
   )
