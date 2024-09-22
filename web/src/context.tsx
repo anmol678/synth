@@ -86,8 +86,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             dispatch({ type: ActionType.SET_ACTIVE_TAB, payload: Tabs.Script })
             dispatch({ type: ActionType.SET_INTENT, payload: Intents.None })
             botResponseContent = 'Script generated successfully.'
-            addMessage(botResponseContent, MessageSender.Assistant)
           }
+          addMessage(botResponseContent, MessageSender.Assistant)
           break
         }
         case IntentType.UpdateSchema: {
