@@ -1,24 +1,24 @@
-import { Intent } from '@/types'
+import { Intent, IntentType } from '@/types'
 
-const Intents: Record<string, Intent> = {
-  GenerateSchema: {
-    value: 'generateSchema',
+const Intents: Record<IntentType, Intent> = {
+  [IntentType.GenerateSchema]: {
+    type: IntentType.GenerateSchema,
     label: 'Generate Schema',
   },
-  GenerateScript: {
-    value: 'generateScript',
+  [IntentType.GenerateScript]: {
+    type: IntentType.GenerateScript,
     label: 'Generate Script',
   },
-  UpdateSchema: {
-    value: 'updateSchema',
+  [IntentType.UpdateSchema]: {
+    type: IntentType.UpdateSchema,
     label: 'Update Schema',
   },
-  UpdateScript: {
-    value: 'updateScript',
+  [IntentType.UpdateScript]: {
+    type: IntentType.UpdateScript,
     label: 'Update Script',
   },
-  None: {
-    value: 'none',
+  [IntentType.None]: {
+    type: IntentType.None,
     label: 'None',
   },
 }
