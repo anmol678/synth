@@ -20,6 +20,56 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+@layer components {  
+  .button {
+    @apply px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+
+  .button-primary {
+    @apply bg-blue-500 text-white hover:bg-blue-600;
+  }
+
+  .button-secondary {
+    @apply bg-gray-200 text-gray-700 hover:bg-gray-300;
+  }
+
+  .button[data-variant="small"] {
+    @apply px-3 py-0 rounded-lg text-sm font-semibold;
+  }
+
+  .button[data-variant="icon"] {
+    @apply p-0 rounded-full h-10 w-10 flex items-center justify-center;
+  }
+
+  .button[data-variant="pill"] {
+    @apply px-2 py-1 text-xs font-semibold rounded-full;
+  }
+
+  .button[data-style="primary"] {
+    @apply button-primary;
+  }
+
+  .button[data-style="secondary"] {
+    @apply button-secondary;
+  }
+
+  .button[data-style="action"] {
+    @apply bg-green-500 text-white hover:bg-green-600;
+  }
+
+  .button[data-style="danger"] {
+    @apply bg-red-500 text-white hover:bg-red-600;
+  }
+
+  .button[data-selected="true"] {
+    @apply button-primary;
+  }
+
+  .button[data-selected="false"] {
+    @apply button-secondary;
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
