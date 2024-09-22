@@ -1,4 +1,5 @@
 import React from 'react'
+import { cn } from '@/utils/styles'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'danger'
@@ -21,6 +22,6 @@ export default function Button({ variant = 'primary', className, ...props }: But
   }
 
   return (
-    <button className={`${baseStyle} ${className}`} {...props} />
+    <button className={cn(baseStyle, className)} {...props} />
   )
 }
