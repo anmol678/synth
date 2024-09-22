@@ -21,7 +21,6 @@ export default function ScriptTab() {
       setExecutionResult(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
     setIsExecuting(false)
-    setIsExecuting(false)
   }
 
   return (
@@ -33,7 +32,7 @@ export default function ScriptTab() {
           variant="full"
         />
       </div>
-      <div className="flex-shrink-0 flex justify-between items-center w-full border-t-2 p-4 bg-white">
+      <div className="flex-shrink-0 flex justify-between items-center w-full border-t-2 p-4 bg-white min-h-20">
         <div className="p-2 flex items-baseline gap-2">
           {executionResult && (
             <pre className="whitespace-pre-wrap break-words">{executionResult}</pre>
@@ -43,15 +42,14 @@ export default function ScriptTab() {
           {/* TODO: add test run functionality */}
           <Button
             onClick={() => alert('Test run functionality not implemented yet')}
-            variant="secondary"
+            data-style='secondary'
             disabled={true}
           >
             Test Run
           </Button>
           <Button
             onClick={handleExecuteScript}
-            variant="primary"
-            className="bg-green-500 hover:bg-green-600"
+            data-style='action'
             disabled={isExecuting}
           >
             Execute & Save

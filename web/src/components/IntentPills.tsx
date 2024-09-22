@@ -11,14 +11,14 @@ interface IntentPillsProps {
 
 export default function IntentPills({ intents, activeIntent, onSetIntent, loading }: IntentPillsProps) {
   return (
-    <div className="mb-2 flex space-x-2">
+    <div className="flex -ml-0.5 space-x-2">
       {intents.map((intent) => (
         <Button
           key={intent.type}
           onClick={() => onSetIntent(intent)}
-          variant={intent === activeIntent ? 'primary' : 'secondary'}
           disabled={loading}
-          className="px-3 text-sm font-semibold rounded-full"
+          data-variant='pill'
+          data-selected={intent === activeIntent}
         >
           {intent.label}
         </Button>

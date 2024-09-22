@@ -19,7 +19,7 @@ export default function MessageList({ messages, sendMessage }: MessageListProps)
               <Button
                 key={index}
                 onClick={() => sendMessage(suggestion)}
-                variant="secondary"
+                data-style='secondary'
               >
                 {suggestion}
               </Button>
