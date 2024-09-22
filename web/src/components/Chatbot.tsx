@@ -6,7 +6,7 @@ import Button from '@/components/Button'
 import { useChatbot } from '@/hooks/useChatbot'
 
 export default function Chatbot() {
-  const { messages, sendMessage, loading, activeIntent, onSetIntent, intents } = useChatbot()
+  const { messages, sendMessage, loading, activeIntent, onSetIntent, intents, reset } = useChatbot()
   const [input, setInput] = useState('')
 
   const handleSend = (message: string) => {
@@ -23,6 +23,12 @@ export default function Chatbot() {
 
   return (
     <div className="flex flex-col h-full">
+      <div className="flex flex-row justify-between border-b-2 px-4 py-2">
+        <span className="font-bold">Synth</span>
+        <Button onClick={reset} className="px-3 py-0 rounded-lg text-sm font-semibold bg-red-500 hover:bg-red-600">
+          Reset
+        </Button>
+      </div>
       <MessageList messages={messages} sendMessage={sendMessage} />
       <div className="p-2 border-t-2">
         <IntentPills

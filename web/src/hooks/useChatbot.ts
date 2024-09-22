@@ -14,6 +14,10 @@ export const useChatbot = () => {
     dispatch({ type: ActionType.SET_INTENT, payload: intent })
   }, [dispatch])
 
+  const handleReset = useCallback(() => {
+    dispatch({ type: ActionType.RESET })
+  }, [dispatch])
+
   const intents = useMemo(() => {
     return [
       state.tables.length === 0 && Intents[IntentType.GenerateSchema],
@@ -30,5 +34,6 @@ export const useChatbot = () => {
     activeIntent: state.intent,
     onSetIntent: handleSetIntent,
     intents,
+    reset: handleReset,
   }
 }
