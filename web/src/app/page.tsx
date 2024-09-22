@@ -6,7 +6,7 @@ import Chatbot from '@/components/Chatbot'
 export default function Home() {
   return (
     <div className="flex h-screen">
-      <div className="w-1/3 border-r flex flex-col">
+      <div className="w-1/3 border-r-2 flex flex-col">
         <Chatbot />
       </div>
 
