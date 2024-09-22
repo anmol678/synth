@@ -49,6 +49,7 @@ export interface Tab {
 }
 
 export enum ActionType {
+  RESET = 'RESET',
   SET_TABLES = 'SET_TABLES',
   SET_SCRIPT = 'SET_SCRIPT',
   ADD_MESSAGE = 'ADD_MESSAGE',
@@ -59,6 +60,7 @@ export enum ActionType {
 }
 
 export type Action =
+  | { type: ActionType.RESET }
   | { type: ActionType.SET_TABLES; payload: TableSelectable[] }
   | { type: ActionType.SET_SCRIPT; payload: string }
   | { type: ActionType.ADD_MESSAGE; payload: Message }

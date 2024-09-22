@@ -27,6 +27,8 @@ const AppContext = createContext<AppContextType | null>(null)
 
 function appReducer(state: AppState, action: Action): AppState {
   switch (action.type) {
+    case ActionType.RESET:
+      return initialState
     case ActionType.SET_TABLES:
       return { ...state, tables: action.payload }
     case ActionType.SET_SCRIPT:
