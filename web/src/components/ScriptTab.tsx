@@ -33,7 +33,7 @@ export default function ScriptTab() {
           variant="full"
         />
       </div>
-      <div className="flex-shrink-0 flex justify-between items-center w-full border-t-2 p-2 bg-white">
+      <div className="flex-shrink-0 flex justify-between items-center w-full border-t-2 p-4 bg-white">
         <div className="p-2 flex items-baseline gap-2">
           {executionResult && (
             <pre className="whitespace-pre-wrap break-words">{executionResult}</pre>

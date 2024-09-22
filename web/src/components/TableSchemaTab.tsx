@@ -42,7 +42,7 @@ export default function TableSchemaTab() {
           />
         ))}
       </div>
-      <div className="flex-shrink-0 flex justify-between items-center w-full border-t-2 p-2 min-h-20 bg-white">
+      <div className="flex-shrink-0 flex justify-between items-center w-full border-t-2 px-4 py-2 min-h-20 bg-white">
         <div className="flex flex-col gap-2 h-full">
           <span className="text-sm font-semibold text-gray-700 self-start">Selected Tables</span>
           <div className="flex flex-wrap gap-2">
