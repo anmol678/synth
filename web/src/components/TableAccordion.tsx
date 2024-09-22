@@ -36,12 +36,10 @@ export default function TableAccordion({ table, isSelected, onCheckboxChange, on
         <span>{isOpen ? '-' : '+'}</span>
       </div>
       {isOpen && (
-        <div className="p-2">
-          <CodeDisplay
-            code={table.schema}
-            onCodeChange={(newCode) => onSchemaChange({ ...table, schema: newCode })}
-          />
-        </div>
+        <CodeDisplay
+          code={table.schema}
+          onCodeChange={(newCode) => onSchemaChange({ ...table, schema: newCode })}
+        />
       )}
     </div>
   )

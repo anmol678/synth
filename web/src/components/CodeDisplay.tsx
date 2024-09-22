@@ -15,7 +15,7 @@ export default function CodeDisplay({ code, onCodeChange, variant = 'default' }:
       break
     case 'default':
     default:
-      baseStyle += ' min-h-64 h-fit p-2'
+      baseStyle += ' min-h-64 h-fit p-4'
       break
   }
 
