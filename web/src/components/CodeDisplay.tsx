@@ -1,19 +1,29 @@
+import React from 'react'
+
 interface CodeDisplayProps {
   code: string
   onCodeChange: (newCode: string) => void
-  size?: 'default' | 'full'
+  variant?: 'default' | 'full'
 }
 
-export default function CodeDisplay({ code, onCodeChange, size = 'default' }: CodeDisplayProps) {
-  const textareaHeight = size === 'full' ? 'h-full' : 'h-64'
+export default function CodeDisplay({ code, onCodeChange, variant = 'default' }: CodeDisplayProps) {
+  let baseStyle = 'flex-1 w-full font-mono resize-none'
+
+  switch (variant) {
+    case 'full':
+      baseStyle += ' h-full px-8 focus:outline-none'
+      break
+    case 'default':
+    default:
+      baseStyle += ' min-h-64 h-fit p-2'
+      break
+  }
 
   return (
-    <div className="flex-1">
-      <textarea
-        value={code}
-        onChange={(e) => onCodeChange(e.target.value)}
-        className={`w-full ${textareaHeight} p-2 border rounded mb-2 font-mono`}
-      />
-    </div>
+    <textarea
+      value={code}
+      onChange={(e) => onCodeChange(e.target.value)}
+      className={baseStyle}
+    />
   )
 }
