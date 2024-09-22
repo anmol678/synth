@@ -40,11 +40,13 @@ export default function Chatbot() {
             placeholder="Type your message..."
             disabled={loading}
           />
-          {loading ? <Loader /> : (
-            <Button onClick={() => handleSend(input)} disabled={loading} className="self-end rounded-lg">
-              ➤
-            </Button>
-          )}
+          <div className="self-end">
+            {loading ? <Loader /> : (
+              <Button onClick={() => handleSend(input)} disabled={loading} className="rounded-lg">
+                ➤
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>

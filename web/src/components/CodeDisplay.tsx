@@ -11,7 +11,7 @@ export default function CodeDisplay({ code, onCodeChange, variant = 'default' }:
 
   switch (variant) {
     case 'full':
-      baseStyle += ' h-full px-8 focus:outline-none'
+      baseStyle += ' h-full px-8 py-6 focus:outline-none'
       break
     case 'default':
     default:
