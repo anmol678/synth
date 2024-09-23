@@ -20,6 +20,24 @@ export async function generateSchema(prompt: string) {
   }
 }
 
+export async function updateSchema(prompt: string, tables: Table[]) {
+  try {
+    const response = await fetch(`${BASE_URL}/update-schema`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt, tables }),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Schema update failed: ${errorData.detail || 'Unknown error'}`);
+    }
+    return response.json();
+  } catch (error: unknown) {
+    console.error('Error in updateSchema:', error)
+    throw new Error(error instanceof Error ? error.message : 'Failed to update schema');
+  }
+}
+
 export async function generateScript(prompt: string, selectedTables: Table[]) {
   try {
     const response = await fetch(`${BASE_URL}/generate-script`, {
@@ -35,6 +53,24 @@ export async function generateScript(prompt: string, selectedTables: Table[]) {
   } catch (error: unknown) {
     console.error('Error in generateScript:', error)
     throw new Error(error instanceof Error ? error.message : 'Failed to generate script');
+  }
+}
+
+export async function updateScript(prompt: string, script: string, selectedTables: Table[]) {
+  try {
+    const response = await fetch(`${BASE_URL}/update-script`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt, script, selected_tables: selectedTables }),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Script update failed: ${errorData.detail || 'Unknown error'}`);
+    }
+    return response.json();
+  } catch (error: unknown) {
+    console.error('Error in updateScript:', error)
+    throw new Error(error instanceof Error ? error.message : 'Failed to update script');
   }
 }
 
