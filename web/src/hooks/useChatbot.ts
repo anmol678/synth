@@ -15,7 +15,7 @@ export const useChatbot = () => {
   }, [dispatch])
 
   const handleReset = useCallback(() => {
-    dispatch({ type: ActionType.RESET })
+    dispatch({ type: ActionType.RESET, payload: null })
   }, [dispatch])
 
   const intents = useMemo(() => {
