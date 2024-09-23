@@ -49,6 +49,7 @@ export interface Tab {
 }
 
 export enum ActionType {
+  BATCH_UPDATE = 'BATCH_UPDATE',
   RESET = 'RESET',
   SET_TABLES = 'SET_TABLES',
   SET_SCRIPT = 'SET_SCRIPT',
@@ -60,7 +61,8 @@ export enum ActionType {
 }
 
 export type Action =
-  | { type: ActionType.RESET }
+  | { type: ActionType.BATCH_UPDATE; payload: Partial<AppState> }
+  | { type: ActionType.RESET, payload: null }
   | { type: ActionType.SET_TABLES; payload: TableSelectable[] }
   | { type: ActionType.SET_SCRIPT; payload: string }
   | { type: ActionType.ADD_MESSAGE; payload: Message }

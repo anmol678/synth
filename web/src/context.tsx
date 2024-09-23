@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useReducer, useCallback, useMemo } from 'react'
 import { AppState, Message, MessageSender, Action, ActionType, IntentType } from '@/types'
 import { v4 as uuidv4 } from 'uuid'
-import { generateSchema, generateScript } from '@/actions'
+import { generateSchema, updateSchema, generateScript, updateScript } from '@/actions'
 import Tabs from '@/utils/tabs'
 import Intents from '@/utils/intents'
 
@@ -27,6 +27,8 @@ const AppContext = createContext<AppContextType | null>(null)
 
 function appReducer(state: AppState, action: Action): AppState {
   switch (action.type) {
+    case ActionType.BATCH_UPDATE:
+      return { ...state, ...action.payload }
     case ActionType.RESET:
       return initialState
     case ActionType.SET_TABLES:
@@ -66,16 +68,18 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
     dispatch({ type: ActionType.SET_LOADING, payload: true })
     try {
+      let updates: Partial<AppState> = {}
       let botResponseContent = ''
 
       switch (intent) {
         case IntentType.GenerateSchema: {
           const response = await generateSchema(input)
-          dispatch({ type: ActionType.SET_TABLES, payload: response.tables })
-          dispatch({ type: ActionType.SET_ACTIVE_TAB, payload: Tabs.Tables })
-          dispatch({ type: ActionType.SET_INTENT, payload: Intents.GenerateScript })
+          updates = {
+            tables: response.tables,
+            activeTab: Tabs.Tables,
+            intent: Intents.GenerateScript,
+          }
           botResponseContent = 'Schema generated successfully.'
-          addMessage(botResponseContent, MessageSender.Assistant)
           break
         }
         case IntentType.GenerateScript: {
@@ -84,54 +88,53 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             botResponseContent = 'Select at least one table to generate script.'
           } else {
             const response = await generateScript(input, selectedTables)
-            dispatch({ type: ActionType.SET_SCRIPT, payload: response.script })
-            dispatch({ type: ActionType.SET_ACTIVE_TAB, payload: Tabs.Script })
-            dispatch({ type: ActionType.SET_INTENT, payload: Intents.None })
+            updates = {
+              dataGenerationScript: response.script,
+              activeTab: Tabs.Script,
+              intent: Intents.None,
+            }
             botResponseContent = 'Script generated successfully.'
           }
-          addMessage(botResponseContent, MessageSender.Assistant)
           break
         }
         case IntentType.UpdateSchema: {
-          // TODO: use update func instead of generating new
-          // const response = await generateSchema(input)
-          // dispatch({ type: 'SET_TABLES', payload: response.tables })
-          // dispatch({ type: 'SET_ACTIVE_TAB', payload: Tabs.Tables })
-          // dispatch({ type: 'SET_SCRIPT', payload: '' })
-          // botResponseContent = 'Schema updated successfully.'
-          setTimeout(() => {
-            dispatch({ type: ActionType.SET_INTENT, payload: Intents.None })
-            botResponseContent = 'This feature is not available yet.'
-            addMessage(botResponseContent, MessageSender.Assistant)
-          }, 1000)
+          const response = await updateSchema(input, state.tables)
+          updates = {
+            tables: response.tables,
+            activeTab: Tabs.Tables,
+            dataGenerationScript: '',
+            intent: Intents.GenerateScript,
+          }
+          botResponseContent = 'Schema updated successfully.'
           break
         }
         case IntentType.UpdateScript: {
-          // TODO: use update func instead of generating new
-          // const response = await generateScript(input, state.tables)
-          // dispatch({ type: 'SET_SCRIPT', payload: response.script })
-          // dispatch({ type: 'SET_ACTIVE_TAB', payload: Tabs.Script })
-          // botResponseContent = 'Script updated successfully.'
-          setTimeout(() => {
-            dispatch({ type: ActionType.SET_INTENT, payload: Intents.None })
-            botResponseContent = 'This feature is not available yet.'
-            addMessage(botResponseContent, MessageSender.Assistant)
-          }, 1000)
+          const selectedTables = state.tables.filter((table) => table.isSelected)
+          const response = await updateScript(input, state.dataGenerationScript, selectedTables)
+          updates = {
+            dataGenerationScript: response.script,
+            activeTab: Tabs.Script,
+            intent: Intents.None,
+          }
+          botResponseContent = 'Script updated successfully.'
           break
         }
         default: {
           break
         }
       }
+
+      dispatch({ type: ActionType.BATCH_UPDATE, payload: updates });
+      addMessage(botResponseContent, MessageSender.Assistant);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
       const errorContent = `Error: ${errorMessage}`
+      dispatch({ type: ActionType.SET_ERROR, payload: errorContent })
       addMessage(errorContent, MessageSender.Assistant)
-      dispatch({ type: ActionType.SET_ERROR, payload: errorMessage })
     } finally {
       dispatch({ type: ActionType.SET_LOADING, payload: false })
     }
-  }, [state.intent, state.tables, dispatch, addMessage])
+  }, [state.intent, state.tables, state.dataGenerationScript, addMessage, dispatch])
 
   const contextValue = useMemo(() => ({
     state,
