@@ -106,3 +106,22 @@ async def execute_fake_data_generation(
         return ScriptExecutionResponse(message="Data generation completed successfully", result=result)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+class TestRunRequest(BaseModel):
+    tables: list[Table]
+    script: str
+
+class TestRunResponse(BaseModel):
+    result: dict
+
+@router.post("/test-run-script")
+async def test_run_script(
+    request: TestRunRequest,
+    script_executor: ScriptExecutor = Depends(get_script_executor)
+):
+    try:
+        result = await script_executor.test_run(request.tables, request.script)
+        return TestRunResponse(result=result)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

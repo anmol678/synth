@@ -8,6 +8,19 @@ from app.utils.logger import logger
 
 class ScriptExecutor:
 
+    async def test_run(self, tables: list[Table], script: str) -> dict:
+        try:
+            sorted_tables = topological_sort(tables)
+            local_namespace = await self._execute_script(script)
+            results = {}
+            for table in sorted_tables:
+                data = local_namespace.get(f"{table.name.lower()}_data", [])
+                results[table.name] = data
+            return results
+        except Exception as e:
+            logger.error(f"Error in test run: {str(e)}")
+            raise
+
     async def execute(self, db: Connection, tables: list[Table], script: str) -> dict:
         async with db.transaction():
             try:
