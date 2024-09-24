@@ -33,12 +33,12 @@ export default function ScriptTab() {
         />
       </div>
       <div className="flex-shrink-0 flex justify-between items-center w-full border-t-2 p-4 bg-white min-h-20">
-        <div className="p-2 flex items-baseline gap-2">
+        <div className="p-2 flex items-baseline gap-2 whitespace-pre-wrap break-words">
           {executionResult && (
-            <pre className="whitespace-pre-wrap break-words">{executionResult}</pre>
+            <span className="font-mono text-sm">{executionResult}</span>
           )}
         </div>
-        <div className="flex items-center self-end space-x-2 h-full">
+        <div className="flex items-center self-end space-x-2 h-full flex-shrink-0">
           {/* TODO: add test run functionality */}
           <Button
             onClick={() => alert('Test run functionality not implemented yet')}
