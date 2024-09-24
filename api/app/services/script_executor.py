@@ -9,15 +9,16 @@ from app.utils.logger import logger
 class ScriptExecutor:
 
     async def execute(self, db: Connection, tables: list[Table], script: str) -> dict:
-        try:
-            await self._prepare_database(db)
-            sorted_tables = await self._create_tables(db, tables)
-            local_namespace = await self._execute_script(script)
-            results = await self._insert_data(db, sorted_tables, local_namespace)
-            return results
-        except Exception as e:
-            logger.error(f"Error executing script: {str(e)}")
-            raise
+        async with db.transaction():
+            try:
+                await self._prepare_database(db)
+                sorted_tables = await self._create_tables(db, tables)
+                local_namespace = await self._execute_script(script)
+                results = await self._insert_data(db, sorted_tables, local_namespace)
+                return results
+            except Exception as e:
+                logger.error(f"Error executing script: {str(e)}")
+                raise
 
     async def _prepare_database(self, db: Connection):
         await drop_all_tables(db)
@@ -25,7 +26,7 @@ class ScriptExecutor:
     async def _create_tables(self, db: Connection, tables: list[Table]) -> list[Table]:
         sorted_tables = topological_sort(tables)
         for table in sorted_tables:
-            await create_table(db, table.name, table.schema)
+            await create_table(db, table.name, table.schema_sql)
         return sorted_tables
 
     async def _execute_script(self, script: str) -> dict:

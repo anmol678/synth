@@ -93,7 +93,7 @@ class ScriptExecutionRequest(BaseModel):
 
 class ScriptExecutionResponse(BaseModel):
     message: str
-    result: str
+    result: dict
 
 @router.post("/execute-script")
 async def execute_fake_data_generation(
