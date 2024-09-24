@@ -74,4 +74,8 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  .break-word {
+    word-break: break-word;
+  }
 }
