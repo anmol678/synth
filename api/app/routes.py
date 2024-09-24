@@ -102,7 +102,7 @@ async def execute_fake_data_generation(
     script_executor: ScriptExecutor = Depends(get_script_executor)
 ):
     try:
-        result = await script_executor.execute(request.tables, request.script)
+        result = await script_executor.execute(db, request.tables, request.script)
         return ScriptExecutionResponse(message="Data generation completed successfully", result=result)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
