@@ -10,8 +10,9 @@ export const useIDE = () => {
     return [
       state.tables.length > 0 && Tabs.Tables,
       state.dataGenerationScript && Tabs.Script,
+      state.testResults && Tabs.TestResults,
     ].filter(Boolean) as Tab[]
-  }, [state.tables.length, state.dataGenerationScript])
+  }, [state.tables.length, state.dataGenerationScript, state.testResults])
 
   const setActiveTab = useCallback((tab: Tab) => {
     dispatch({ type: ActionType.SET_ACTIVE_TAB, payload: tab })
