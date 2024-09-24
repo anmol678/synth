@@ -1,11 +1,9 @@
-import re
-from collections import defaultdict
+from asyncpg import Connection
 
-from app.models.table import Table
 from app.utils.logger import logger
 
 
-async def fetch_all_table_names(conn):
+async def fetch_all_table_names(conn: Connection):
     query = """
     SELECT table_name 
     FROM information_schema.tables
@@ -14,7 +12,7 @@ async def fetch_all_table_names(conn):
     tables = await conn.fetch(query)
     return [table['table_name'] for table in tables]
 
-async def drop_all_tables(conn):
+async def drop_all_tables(conn: Connection):
     """
     Drop all tables in the database, handling foreign key dependencies.
     """
@@ -36,7 +34,7 @@ async def drop_all_tables(conn):
 
     logger.info("All tables have been dropped.")
 
-async def fetch_table_schema(conn, table_name, schema_name='public'):
+async def fetch_table_schema(conn: Connection, table_name: str, schema_name: str = 'public'):
     try:
         query = """
         SELECT column_name, data_type, character_maximum_length, 
@@ -109,57 +107,27 @@ async def fetch_table_schema(conn, table_name, schema_name='public'):
         logger.error(f"Error fetching table schema: {e}")
         return None
 
-def extract_foreign_keys(schema_sql: str) -> list[str]:
-    # Regular expression to match explicit FOREIGN KEY constraints
-    explicit_fk_pattern = r'FOREIGN KEY\s*\([^)]+\)\s*REFERENCES\s*(\w+)'
-    
-    # Regular expression to match implicit foreign key references
-    implicit_fk_pattern = r'\b(\w+)\s+\w+(?:\(\d+(?:,\s*\d+)?\))?\s+REFERENCES\s+(\w+)'
-    
-    # Find all matches in the schema SQL
-    explicit_matches = re.findall(explicit_fk_pattern, schema_sql, re.IGNORECASE)
-    implicit_matches = re.findall(implicit_fk_pattern, schema_sql, re.IGNORECASE)
-    
-    # Combine explicit and implicit matches
-    all_matches = explicit_matches + [match[1] for match in implicit_matches]
-    
-    # Return the list of unique referenced table names
-    return list(set(all_matches))
+async def create_table(db: Connection, table_name: str, schema: str):
+    try:
+        logger.info(f"Creating table: {table_name}")
+        await db.execute(schema)
+        logger.info(f"Table {table_name} created successfully")
+    except Exception as e:
+        logger.error(f"Error creating table {table_name}: {str(e)}")
+        raise
 
-def topological_sort(tables: list[Table]) -> list[Table]:
-    """
-    Perform topological sort on the list of tables based on their foreign key relationships.
-    """
-    # Extract foreign keys from the schema SQL of each table
-    tables_with_fks = [(table, extract_foreign_keys(table.schema_sql)) for table in tables]
-    
-    # Create a graph representation
-    graph = defaultdict(list)
-    in_degree = {table.name: 0 for table, _ in tables_with_fks}
-    name_to_table = {table.name: table for table, _ in tables_with_fks}
-
-    # Build the graph and in-degree
-    for table, fks in tables_with_fks:
-        for fk in fks:
-            graph[fk].append(table.name)
-            in_degree[table.name] += 1
-
-    # Perform topological sort
-    queue = [table.name for table, _ in tables_with_fks if in_degree[table.name] == 0]
-    sorted_names = []
-
-    while queue:
-        current = queue.pop(0)
-        sorted_names.append(current)
-
-        for neighbor in graph[current]:
-            in_degree[neighbor] -= 1
-            if in_degree[neighbor] == 0:
-                queue.append(neighbor)
-
-    # Check for circular dependencies
-    if len(sorted_names) != len(tables_with_fks):
-        raise ValueError("Circular dependency detected in table relationships")
-
-    # Return the sorted list of Table objects
-    return [name_to_table[name] for name in sorted_names]
+async def insert_data(db: Connection, table_name: str, data):
+    if data:
+        try:
+            columns = ', '.join(data[0].keys())
+            placeholders = ', '.join(f'${i+1}' for i in range(len(data[0])))
+            query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+            await db.executemany(query, [tuple(row.values()) for row in data])
+            logger.info(f"Successfully inserted {len(data)} rows into {table_name}")
+            return len(data)
+        except Exception as e:
+            logger.error(f"Error inserting data into {table_name}: {str(e)}")
+            raise
+    else:
+        logger.info(f"No data to insert for {table_name}")
+        return 0
