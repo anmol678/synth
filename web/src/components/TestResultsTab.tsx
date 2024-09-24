@@ -39,7 +39,7 @@ export default function TestResultsTab() {
       </div>
       <div className="flex-shrink-0 flex items-center justify-end w-full border-t-2 p-4 bg-white">
         <Button
-          onClick={() => { }}
+          onClick={() => alert('This feature is not yet implemented')}
           data-style='action'
         >
           Save Data
