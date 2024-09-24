@@ -104,6 +104,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             tables: response.tables,
             activeTab: Tabs.Tables,
             dataGenerationScript: '',
+            testResults: null,
             intent: Intents.GenerateScript,
           }
           botResponseContent = 'Schema updated successfully.'
@@ -115,6 +116,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           updates = {
             dataGenerationScript: response.script,
             activeTab: Tabs.Script,
+            testResults: null,
             intent: Intents.None,
           }
           botResponseContent = 'Script updated successfully.'
