@@ -21,6 +21,7 @@ const initialState: AppState = {
   error: null,
   activeTab: null,
   intent: Intents[IntentType.GenerateSchema],
+  testResults: null,
 }
 
 const AppContext = createContext<AppContextType | null>(null)

@@ -28,6 +28,7 @@ export interface AppState {
   error: string | null
   activeTab: Tab | null
   intent: Intent
+  testResults: Record<string, any[]> | null
 }
 
 export enum IntentType {

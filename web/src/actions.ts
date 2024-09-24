@@ -74,6 +74,24 @@ export async function updateScript(prompt: string, script: string, selectedTable
   }
 }
 
+export async function testRunScript(script: string, tables: Table[]) {
+  try {
+    const response = await fetch(`${BASE_URL}/test-run-script`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ script, tables }),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Script test run failed: ${errorData.detail || 'Unknown error'}`);
+    }
+    return response.json();
+  } catch (error: unknown) {
+    console.error('Error in testRunScript:', error)
+    throw new Error(error instanceof Error ? error.message : 'Failed to test run script');
+  }
+}
+
 export async function executeScript(script: string, tables: Table[]) {
   try {
     const response = await fetch(`${BASE_URL}/execute-script`, {
