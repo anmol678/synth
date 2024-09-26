@@ -4,6 +4,10 @@ Generate fake data, fast.
 
 Synth simulates databases for large organizations by generating schemas and scripts to create realistic fake data. It then populates a PostgreSQL database with this synthetic information.
 
+## 🎥 Demo
+
+<iframe src="https://vimeo.com/1012610277" width="640" height="360" frameborder="0" allow="autoplay;"></iframe>
+
 ## 🚀 Running the Project
 
 To run this project, follow these simple steps:
