@@ -4,7 +4,7 @@ import Button from '@/components/Button'
 
 interface IntentPillsProps {
   intents: Intent[]
-  activeIntent: Intent
+  activeIntent: Intent | null
   onSetIntent: (intent: Intent) => void
   loading: boolean
 }
@@ -14,13 +14,13 @@ export default function IntentPills({ intents, activeIntent, onSetIntent, loadin
     <div className="flex -ml-0.5 space-x-2">
       {intents.map((intent) => (
         <Button
-          key={intent.type}
+          key={intent}
           onClick={() => onSetIntent(intent)}
           disabled={loading}
           data-variant='pill'
           data-selected={intent === activeIntent}
         >
-          {intent.label}
+          {intent}
         </Button>
       ))}
     </div>

@@ -1,7 +1,6 @@
 import { useMemo, useCallback } from 'react'
-import { IntentType, Intent, ActionType } from '@/types'
+import { Intent, ActionType } from '@/types'
 import { useAppContext } from '@/context'
-import Intents from '@/utils/intents'
 
 export const useChatbot = () => {
   const { state, sendMessage, dispatch } = useAppContext()
@@ -20,10 +19,10 @@ export const useChatbot = () => {
 
   const intents = useMemo(() => {
     return [
-      state.tables.length === 0 && Intents[IntentType.GenerateSchema],
-      state.tables.length > 0 && Intents[IntentType.UpdateSchema],
-      state.tables.length > 0 && !state.dataGenerationScript && Intents[IntentType.GenerateScript],
-      state.dataGenerationScript && Intents[IntentType.UpdateScript],
+      state.tables.length === 0 && Intent.GenerateSchema,
+      state.tables.length > 0 && Intent.UpdateSchema,
+      state.tables.length > 0 && !state.dataGenerationScript && Intent.GenerateScript,
+      state.dataGenerationScript && Intent.UpdateScript,
     ].filter(Boolean) as Intent[]
   }, [state.tables.length, state.dataGenerationScript])
 

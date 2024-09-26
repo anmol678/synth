@@ -26,21 +26,15 @@ export interface AppState {
   messages: Message[]
   loading: boolean
   activeTab: Tab | null
-  intent: Intent
+  intent: Intent | null
   testResults: object[] | null
 }
 
-export enum IntentType {
-  GenerateSchema = 'GenerateSchema',
-  UpdateSchema = 'UpdateSchema',
-  GenerateScript = 'GenerateScript',
-  UpdateScript = 'UpdateScript',
-  None = 'None',
-}
-
-export interface Intent {
-  type: IntentType
-  label: string
+export enum Intent {
+  GenerateSchema = 'Generate Schema',
+  UpdateSchema = 'Update Schema',
+  GenerateScript = 'Generate Script',
+  UpdateScript = 'Update Script',
 }
 
 export interface Tab {

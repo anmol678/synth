@@ -1,11 +1,10 @@
 'use client'
 
 import React, { createContext, useContext, useReducer, useCallback, useMemo } from 'react'
-import { AppState, Message, MessageSender, Action, ActionType, IntentType } from '@/types'
+import { AppState, Message, MessageSender, Action, ActionType, Intent } from '@/types'
 import { v4 as uuidv4 } from 'uuid'
 import { generateSchema, updateSchema, generateScript, updateScript } from '@/actions'
 import Tabs from '@/utils/tabs'
-import Intents from '@/utils/intents'
 
 type AppContextType = {
   state: AppState
@@ -19,7 +18,7 @@ const initialState: AppState = {
   messages: [],
   loading: false,
   activeTab: null,
-  intent: Intents[IntentType.GenerateSchema],
+  intent: Intent.GenerateSchema,
   testResults: null,
 }
 
@@ -61,8 +60,13 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   }, [dispatch])
 
   const sendMessage = useCallback(async (input: string) => {
-    const intent = state.intent?.type || IntentType.None
-    const message = input.trim() || Intents[intent].label || '...'
+    const intent = state.intent
+    if (!intent) {
+      addMessage('Select an intent to generate a response.', MessageSender.Assistant)
+      return
+    }
+
+    const message = input.trim() || intent
     addMessage(message, MessageSender.User);
 
     dispatch({ type: ActionType.SET_LOADING, payload: true })
@@ -71,17 +75,17 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       let botResponseContent = ''
 
       switch (intent) {
-        case IntentType.GenerateSchema: {
+        case Intent.GenerateSchema: {
           const response = await generateSchema(input)
           updates = {
-            tables: response.tables,
+            tables: response.tables.map(table => ({ ...table, isSelected: false })),
             activeTab: Tabs.Tables,
-            intent: Intents.GenerateScript,
+            intent: Intent.GenerateScript,
           }
           botResponseContent = 'Schema generated successfully.'
           break
         }
-        case IntentType.GenerateScript: {
+        case Intent.GenerateScript: {
           const selectedTables = state.tables.filter((table) => table.isSelected)
           if (selectedTables.length === 0) {
             botResponseContent = 'Select at least one table to generate script.'
@@ -90,38 +94,34 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             updates = {
               dataGenerationScript: response.script,
               activeTab: Tabs.Script,
-              intent: Intents.None,
+              intent: null,
             }
             botResponseContent = 'Script generated successfully.'
           }
           break
         }
-        case IntentType.UpdateSchema: {
+        case Intent.UpdateSchema: {
           const response = await updateSchema(input, state.tables)
           updates = {
-            tables: response.tables,
+            tables: response.tables.map(table => ({ ...table, isSelected: false })),
             activeTab: Tabs.Tables,
             dataGenerationScript: '',
             testResults: null,
-            intent: Intents.GenerateScript,
+            intent: Intent.GenerateScript,
           }
           botResponseContent = 'Schema updated successfully.'
           break
         }
-        case IntentType.UpdateScript: {
+        case Intent.UpdateScript: {
           const selectedTables = state.tables.filter((table) => table.isSelected)
           const response = await updateScript(input, state.dataGenerationScript, selectedTables)
           updates = {
             dataGenerationScript: response.script,
             activeTab: Tabs.Script,
             testResults: null,
-            intent: Intents.None,
+            intent: null,
           }
           botResponseContent = 'Script updated successfully.'
-          break
-        }
-        default: {
-          botResponseContent = 'Select an intent to generate a response.'
           break
         }
       }
