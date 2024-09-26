@@ -1,7 +1,9 @@
-import TableSchemaTab from '@/components/TableSchemaTab'
-import ScriptTab from '@/components/ScriptTab'
-import TestResultsTab from '@/components/TestResultsTab'
+import { lazy } from 'react'
 import { Tab } from '@/types'
+
+const TableSchemaTab = lazy(() => import('@/components/TableSchemaTab'))
+const ScriptTab = lazy(() => import('@/components/ScriptTab'))
+const TestResultsTab = lazy(() => import('@/components/TestResultsTab'))
 
 const Tabs: Record<string, Tab> = {
   Tables: {
