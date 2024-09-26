@@ -14,13 +14,13 @@ export const useIDE = () => {
     ].filter(Boolean) as Tab[]
   }, [state.tables.length, state.dataGenerationScript, state.testResults])
 
-  const setActiveTab = useCallback((tab: Tab) => {
+  const handleSetActiveTab = useCallback((tab: Tab) => {
     dispatch({ type: ActionType.SET_ACTIVE_TAB, payload: tab })
   }, [dispatch])
 
   return {
     tabs,
     activeTab: state.activeTab,
-    setActiveTab,
+    onSetActiveTab: handleSetActiveTab,
   }
 }

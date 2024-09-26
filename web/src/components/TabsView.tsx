@@ -1,7 +1,13 @@
 import { Tab } from '@/types'
 import { cn } from '@/utils/styles'
 
-export default function TabsView({ tabs, activeTab, setActiveTab }: { tabs: Tab[]; activeTab: Tab; setActiveTab: (tab: Tab) => void }) {
+interface TabsViewProps {
+  tabs: Tab[]
+  activeTab: Tab
+  onSetActiveTab: (tab: Tab) => void
+}
+
+export default function TabsView({ tabs, activeTab, onSetActiveTab }: TabsViewProps) {
   return (
     <div className="flex border-b-2 px-4">
       {tabs.map((tab) => (
@@ -13,7 +19,7 @@ export default function TabsView({ tabs, activeTab, setActiveTab }: { tabs: Tab[
               ? 'border-b-2 border-blue-500 text-blue-500'
               : 'text-gray-500 hover:text-gray-700'
             }`)}
-          onClick={() => setActiveTab(tab)}
+          onClick={() => onSetActiveTab(tab)}
         >
           {tab.name}
         </button>
