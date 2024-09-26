@@ -6,7 +6,7 @@ Synth simulates databases for large organizations by generating schemas and scri
 
 ## 🎥 Demo
 
-<iframe src="https://vimeo.com/1012610277" width="640" height="360" frameborder="0" allow="autoplay;"></iframe>
+https://github.com/user-attachments/assets/26cfe898-7010-46de-9083-5233f6b0f2be
 
 ## 🚀 Running the Project
 
