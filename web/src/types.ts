@@ -27,7 +27,7 @@ export interface AppState {
   loading: boolean
   activeTab: Tab | null
   intent: Intent
-  testResults: Record<string, any[]> | null
+  testResults: object[] | null
 }
 
 export enum IntentType {
