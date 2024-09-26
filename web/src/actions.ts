@@ -4,6 +4,10 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL || '';
 
 export async function post<T>(endpoint: string, body: object): Promise<T> {
   try {
+    if (!BASE_URL) {
+      throw new Error('BASE_URL is not set')
+    }
+    
     const response = await fetch(`${BASE_URL}${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
