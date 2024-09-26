@@ -18,7 +18,6 @@ const initialState: AppState = {
   dataGenerationScript: '',
   messages: [],
   loading: false,
-  error: null,
   activeTab: null,
   intent: Intents[IntentType.GenerateSchema],
   testResults: null,
@@ -40,8 +39,6 @@ function appReducer(state: AppState, action: Action): AppState {
       return { ...state, messages: [...state.messages, action.payload] }
     case ActionType.SET_LOADING:
       return { ...state, loading: action.payload }
-    case ActionType.SET_ERROR:
-      return { ...state, error: action.payload }
     case ActionType.SET_ACTIVE_TAB:
       return { ...state, activeTab: action.payload }
     case ActionType.SET_INTENT:
@@ -65,7 +62,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   const sendMessage = useCallback(async (input: string) => {
     const intent = state.intent?.type || IntentType.None
-    addMessage(input.trim() || Intents[intent].label || '...', MessageSender.User);
+    const message = input.trim() || Intents[intent].label || '...'
+    addMessage(message, MessageSender.User);
 
     dispatch({ type: ActionType.SET_LOADING, payload: true })
     try {
@@ -123,17 +121,16 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           break
         }
         default: {
+          botResponseContent = 'Select an intent to generate a response.'
           break
         }
       }
 
-      dispatch({ type: ActionType.BATCH_UPDATE, payload: updates });
-      addMessage(botResponseContent, MessageSender.Assistant);
+      dispatch({ type: ActionType.BATCH_UPDATE, payload: updates })
+      addMessage(botResponseContent, MessageSender.Assistant)
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      const errorContent = `Error: ${errorMessage}`
-      dispatch({ type: ActionType.SET_ERROR, payload: errorContent })
-      addMessage(errorContent, MessageSender.Assistant)
+      addMessage(`Error: ${errorMessage}`, MessageSender.Assistant)
     } finally {
       dispatch({ type: ActionType.SET_LOADING, payload: false })
     }

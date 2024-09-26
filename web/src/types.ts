@@ -25,7 +25,6 @@ export interface AppState {
   dataGenerationScript: string
   messages: Message[]
   loading: boolean
-  error: string | null
   activeTab: Tab | null
   intent: Intent
   testResults: Record<string, any[]> | null
@@ -56,7 +55,6 @@ export enum ActionType {
   SET_SCRIPT = 'SET_SCRIPT',
   ADD_MESSAGE = 'ADD_MESSAGE',
   SET_LOADING = 'SET_LOADING',
-  SET_ERROR = 'SET_ERROR',
   SET_ACTIVE_TAB = 'SET_ACTIVE_TAB',
   SET_INTENT = 'SET_INTENT',
 }
@@ -68,6 +66,5 @@ export type Action =
   | { type: ActionType.SET_SCRIPT; payload: string }
   | { type: ActionType.ADD_MESSAGE; payload: Message }
   | { type: ActionType.SET_LOADING; payload: boolean }
-  | { type: ActionType.SET_ERROR; payload: string | null }
   | { type: ActionType.SET_ACTIVE_TAB; payload: Tab }
   | { type: ActionType.SET_INTENT; payload: Intent }
