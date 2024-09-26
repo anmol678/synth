@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { TableSelectable, ActionType } from '@/types'
 import TableAccordion from '@/components/TableAccordion'
+import Button from '@/components/Button'
 import { useAppContext } from '@/context'
 
 export default function TableSchemaTab() {
@@ -53,12 +54,9 @@ export default function TableSchemaTab() {
             ))}
           </div>
         </div>
-        <button
-          onClick={handleSelectAll}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-        >
+        <Button onClick={handleSelectAll} data-style='action'>
           {isAllSelected ? 'Deselect All' : 'Select All'}
-        </button>
+        </Button>
       </div>
     </div>
   )
