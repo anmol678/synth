@@ -29,11 +29,11 @@ export const useChatbot = () => {
 
   return {
     messages: state.messages,
-    sendMessage: handleSendMessage,
+    onSendMessage: handleSendMessage,
     loading: state.loading,
     activeIntent: state.intent,
     onSetIntent: handleSetIntent,
     intents,
-    reset: handleReset,
+    onReset: handleReset,
   }
 }
